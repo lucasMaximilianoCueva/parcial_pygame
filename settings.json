@@ -1,0 +1,34 @@
+{
+    "window_x": 720,
+    "window_y": 480,
+    "background_image": "./assets/background_main.jpg",
+    "background_menu": "./assets/background_menu.jpg",
+    "background_music": "./assets/main.mp3",
+    "lose_life_sound": "./assets/lose_life.ogg",
+    "gem_sound": "./assets/gem.ogg",
+    "power_up_sound": "./assets/power_up.ogg",
+    "player_color": [
+        0,
+        0,
+        0
+    ],
+    "initial_lives": 3,
+    "num_obstacles": 30,
+    "num_enemies": 20,
+    "power_up_duration": 5,
+    "player_speed": 15,
+    "difficulties": {
+        "easy": {
+            "num_obstacles": 10,
+            "num_enemies": 5
+        },
+        "medium": {
+            "num_obstacles": 20,
+            "num_enemies": 10
+        },
+        "hard": {
+            "num_obstacles": 30,
+            "num_enemies": 20
+        }
+    }
+}
