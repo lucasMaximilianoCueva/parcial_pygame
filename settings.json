@@ -13,8 +13,8 @@
         0
     ],
     "initial_lives": 3,
-    "num_obstacles": 30,
-    "num_enemies": 20,
+    "num_obstacles": 20,
+    "num_enemies": 10,
     "power_up_duration": 5,
     "player_speed": 15,
     "difficulties": {

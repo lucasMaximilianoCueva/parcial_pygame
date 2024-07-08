@@ -6,43 +6,43 @@ from modules import settings
 
 def spawn_item(window_x, window_y):
     """
-    Generates a random spawn position within the window dimensions.
+    Genera una posición de spawn aleatoria dentro de las dimensiones de la ventana.
 
     Args:
-        window_x (int): The width of the window.
-        window_y (int): The height of the window.
+        window_x (int): La anchura de la ventana.
+        window_y (int): La altura de la ventana.
 
     Returns:
-        list: A list containing the x and y coordinates of the spawn position.
+        list: Una lista que contiene las coordenadas x e y de la posición de spawn.
     """
     return [random.randrange(1, (window_x // 10)) * 10, random.randrange(1, (window_y // 10)) * 10]
 
 def create_obstacles(window_x, window_y, num_obstacles):
     """
-    Creates obstacles by spawning items within the window dimensions a specified number of times.
+    Crea obstáculos generando elementos dentro de las dimensiones de la ventana un número especificado de veces.
 
     Args:
-        window_x (int): The width of the window.
-        window_y (int): The height of the window.
-        num_obstacles (int): The number of obstacles to create.
+        window_x (int): La anchura de la ventana.
+        window_y (int): La altura de la ventana.
+        num_obstacles (int): El número de obstáculos a crear.
 
     Returns:
-        list: A list of obstacles, each represented as a spawn position within the window dimensions.
+        list: Una lista de obstáculos, cada uno representado como una posición de spawn dentro de las dimensiones de la ventana.
     """
     return [spawn_item(window_x, window_y) for _ in range(num_obstacles)]
 
 def create_moving_enemies(window_x, window_y, num_enemies):
     """
-    Generates a list of moving enemies with random positions and directions.
+    Genera una lista de enemigos en movimiento con posiciones y direcciones aleatorias.
 
     Args:
-        window_x (int): The width of the game window.
-        window_y (int): The height of the game window.
-        num_enemies (int): The number of enemies to generate.
+        window_x (int): La anchura de la ventana.
+        window_y (int): La altura de la ventana.
+        num_enemies (int): El número de enemigos a generar.
 
     Returns:
-        list: A list of dictionaries representing the moving enemies. Each dictionary contains the
-              position and direction of an enemy.
+        list: Una lista de diccionarios que representan a los enemigos en movimiento. Cada diccionario contiene la
+              posición y dirección de un enemigo.
     """
     enemies = []
     for _ in range(num_enemies):
@@ -55,15 +55,15 @@ def create_moving_enemies(window_x, window_y, num_enemies):
 
 def validate_direction(change_to, direction):
     """
-    Validates the direction based on the change_to and direction input.
+    Valida la dirección basándose en la entrada change_to y direction.
 
     Args:
-        change_to (str): The direction to change to. Must be one of 'UP', 'DOWN', 'LEFT', or 'RIGHT'.
-        direction (str): The current direction. Must be one of 'UP', 'DOWN', 'LEFT', or 'RIGHT'.
+        change_to (str): cambiar_hacia (str): La dirección a la que cambiar. Debe ser una de las siguientes: 'UP', 'DOWN', 'LEFT', o 'RIGHT'.The direction to change to. Must be one of 'UP', 'DOWN', 'LEFT', or 'RIGHT'.
+        direction (str): La dirección actual. Debe ser 'ARRIBA', 'ABAJO', 'IZQUIERDA' o 'DERECHA'.
 
     Returns:
-        str: The validated direction. If the change_to direction is valid and different from the current direction,
-             it returns the change_to direction. Otherwise, it returns the current direction.
+        str: La dirección validada. Si la dirección change_to es válida y diferente de la dirección actual,
+             devuelve la dirección change_to. En caso contrario, devuelve la dirección actual.
     """
     if change_to == 'UP' and direction != 'DOWN':
         return 'UP'
@@ -77,14 +77,13 @@ def validate_direction(change_to, direction):
 
 def move_player(position, direction):
     """
-    Moves the player in the specified direction.
+    Mueve al jugador en la dirección especificada.
 
     Parameters:
-        position (tuple): The current position of the player as a tuple (x, y).
-        direction (str): The direction in which the player should move. Must be one of 'UP', 'DOWN', 'LEFT', or 'RIGHT'.
-
+        position (tuple): La posición actual del jugador como una tupla (x, y).
+        direction (str): La dirección en la que debe moverse el jugador. Debe ser una de las siguientes: 'ARRIBA', 'ABAJO', 'IZQUIERDA' o 'DERECHA'.
     Returns:
-        tuple: The updated position of the player as a tuple (x, y).
+        tuple: La posición actualizada del jugador como una tupla (x, y).
     """
     if direction == 'UP':
         position[1] -= 10
