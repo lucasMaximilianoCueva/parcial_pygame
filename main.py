@@ -23,7 +23,7 @@ try:
     config = load_game_settings()
 
     # Inicializar ventana del juego
-    pygame.display.set_caption('')
+    pygame.display.set_caption('Snake Game')
     game_window = pygame.display.set_mode((config['window_x'], config['window_y']))
 
     # Función para cargar y actualizar la configuración después de la pantalla de inicio
@@ -44,21 +44,26 @@ try:
         Returns:
             None
         """
-        global config, static_obstacles, moving_enemies
+        global config, static_obstacles
         config = load_game_settings()
         static_obstacles = utils.create_obstacles(config['window_x'], config['window_y'], config['num_obstacles'])
-        moving_enemies = utils.create_moving_enemies(config['window_x'], config['window_y'], config['num_enemies'])
 
     # Cargar imagen de fondo y sonidos
     background_image = pygame.image.load(config['background_image']).convert()
     background_menu = pygame.image.load(config['background_menu']).convert()
     pygame.mixer.music.load(config['background_music'])
     lose_life_sound = pygame.mixer.Sound(config['lose_life_sound'])
-    gem_sound = pygame.mixer.Sound(config['gem_sound'])
+    fruit_sound = pygame.mixer.Sound(config['fruit_sound'])
     power_up_sound = pygame.mixer.Sound(config['power_up_sound'])
 
     # Iniciar música de fondo
     pygame.mixer.music.play(-1)
+
+    # Configurar volumen inicial
+    pygame.mixer.music.set_volume(0.1)
+    lose_life_sound.set_volume(0.2)
+    fruit_sound.set_volume(0.2)
+    power_up_sound.set_volume(0.2)
 
     # Controlador de FPS
     fps = pygame.time.Clock()
@@ -67,9 +72,9 @@ try:
     player_position = [100, 50]
     player_body = [[100, 50]]
 
-    # Posición inicial de la gema y power-up
-    gem_position, power_up_position = utils.spawn_item(config['window_x'], config['window_y']), utils.spawn_item(config['window_x'], config['window_y'])
-    gem_spawn, power_up_spawn = True, True
+    # Posición inicial de la fruita y power-up
+    fruit_position, power_up_position = utils.spawn_item(config['window_x'], config['window_y']), utils.spawn_item(config['window_x'], config['window_y'])
+    fruit_spawn, power_up_spawn = True, True
     power_up_active, power_up_end_time = False, 0
 
     # Dirección inicial del jugador
@@ -78,9 +83,8 @@ try:
     # Puntaje inicial
     score, lives = 0, config['initial_lives']
 
-    # Obstáculos y enemigos en movimiento
+    # Obstáculos
     static_obstacles = utils.create_obstacles(config['window_x'], config['window_y'], config['num_obstacles'])
-    moving_enemies = utils.create_moving_enemies(config['window_x'], config['window_y'], config['num_enemies'])
 
     # Temporizador de obstáculos
     obstacles_hidden = False
@@ -109,7 +113,7 @@ try:
         - pygame.error: Si se produce un error durante el bucle de juego.
         - Excepción: Si hay un error inesperado durante el bucle del juego.
         """
-        global player_position, player_body, direction, change_to, score, lives, gem_spawn, gem_position, power_up_spawn, power_up_position, power_up_active, power_up_end_time, moving_enemies, obstacles_hidden, obstacles_show_time
+        global player_position, player_body, direction, change_to, score, lives, fruit_spawn, fruit_position, power_up_spawn, power_up_position, power_up_active, power_up_end_time, obstacles_hidden, obstacles_show_time
 
         display.start_screen(game_window, config['window_x'], config['window_y'], background_menu)
 
@@ -136,16 +140,16 @@ try:
                 player_position = utils.move_player(player_position, direction)
 
                 player_body.insert(0, list(player_position))
-                if player_position == gem_position:
+                if player_position == fruit_position:
                     score += 10
-                    gem_spawn = False
-                    gem_sound.play()
+                    fruit_spawn = False
+                    fruit_sound.play()
                 else:
                     player_body.pop()
 
-                if not gem_spawn:
-                    gem_position = utils.spawn_item(config['window_x'], config['window_y'])
-                gem_spawn = True
+                if not fruit_spawn:
+                    fruit_position = utils.spawn_item(config['window_x'], config['window_y'])
+                    fruit_spawn = True
 
                 if power_up_spawn:
                     power_up_position = utils.spawn_item(config['window_x'], config['window_y'])
@@ -170,8 +174,9 @@ try:
 
                 for pos in player_body:
                     pygame.draw.rect(game_window, config['player_color'], pygame.Rect(pos[0], pos[1], 10, 10))
-                pygame.draw.rect(game_window, settings.colors['white'], pygame.Rect(gem_position[0], gem_position[1], 10, 10))
+                    pygame.draw.rect(game_window, settings.colors['white'], pygame.Rect(fruit_position[0], fruit_position[1], 10, 10))
 
+                # Vuelvo a dibujar el power up
                 if not power_up_spawn:
                     pygame.draw.rect(game_window, settings.colors['yellow'], pygame.Rect(power_up_position[0], power_up_position[1], 10, 10))
 
@@ -183,16 +188,16 @@ try:
                             if lives == 0:
                                 utils.display_game_over(game_window, score, config['window_x'], config['window_y'])
 
-                for enemy in moving_enemies:
-                    pygame.draw.rect(game_window, settings.colors['blue'], pygame.Rect(enemy["position"][0], enemy["position"][1], 10, 10))
-                    if player_position == enemy["position"]:
-                        lives = utils.lose_life(lose_life_sound, lives)
-                        if lives == 0:
-                            utils.display_game_over(game_window, score, config['window_x'], config['window_y'])
+                # for enemy in moving_enemies:
+                #     pygame.draw.rect(game_window, settings.colors['blue'], pygame.Rect(enemy["position"][0], enemy["position"][1], 10, 10))
+                #     if player_position == enemy["position"]:
+                #         lives = utils.lose_life(lose_life_sound, lives)
+                #         if lives == 0:
+                #             utils.display_game_over(game_window, score, config['window_x'], config['window_y'])
 
-                moving_enemies = utils.move_enemies(moving_enemies, config['window_x'])
+                # moving_enemies = utils.move_enemies(moving_enemies, config['window_x'])
 
-                # Loses all lives if player collides with wall
+                # Pierdo todas las vidas si se colisiona contra algun limite de la ventana
                 if utils.check_collision(player_position, config['window_x'], config['window_y']):
                     lose_life_sound.play()
                     utils.display_game_over(game_window, score, config['window_x'], config['window_y'])

@@ -187,6 +187,7 @@ def load_scores(filename='scores.csv'):
     try:
         with open(filename, mode='r') as file:
             reader = csv.reader(file)
+            # Por cada fila, se crea una tupla con el primer elemento (string) y el segundo (int)
             scores = [(row[0], int(row[1])) for row in reader]
     except FileNotFoundError:
         pass

@@ -5,7 +5,7 @@
     "background_menu": "./assets/background_menu.jpg",
     "background_music": "./assets/main.mp3",
     "lose_life_sound": "./assets/lose_life.ogg",
-    "gem_sound": "./assets/gem.ogg",
+    "fruit_sound": "./assets/gem.ogg",
     "power_up_sound": "./assets/power_up.ogg",
     "player_color": [
         0,
@@ -16,7 +16,7 @@
     "num_obstacles": 20,
     "num_enemies": 10,
     "power_up_duration": 5,
-    "player_speed": 15,
+    "player_speed": 10,
     "difficulties": {
         "easy": {
             "num_obstacles": 10,

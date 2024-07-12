@@ -6,7 +6,7 @@ from modules import settings
 
 def spawn_item(window_x, window_y):
     """
-    Genera una posición de spawn aleatoria dentro de las dimensiones de la ventana.
+    Genera un elemento en una posición aleatoria dentro de las dimensiones de la ventana.
 
     Args:
         window_x (int): La anchura de la ventana.
@@ -31,34 +31,34 @@ def create_obstacles(window_x, window_y, num_obstacles):
     """
     return [spawn_item(window_x, window_y) for _ in range(num_obstacles)]
 
-def create_moving_enemies(window_x, window_y, num_enemies):
-    """
-    Genera una lista de enemigos en movimiento con posiciones y direcciones aleatorias.
+# def create_moving_enemies(window_x, window_y, num_enemies):
+#     """
+#     Genera una lista de enemigos en movimiento con posiciones y direcciones aleatorias.
 
-    Args:
-        window_x (int): La anchura de la ventana.
-        window_y (int): La altura de la ventana.
-        num_enemies (int): El número de enemigos a generar.
+#     Args:
+#         window_x (int): La anchura de la ventana.
+#         window_y (int): La altura de la ventana.
+#         num_enemies (int): El número de enemigos a generar.
 
-    Returns:
-        list: Una lista de diccionarios que representan a los enemigos en movimiento. Cada diccionario contiene la
-              posición y dirección de un enemigo.
-    """
-    enemies = []
-    for _ in range(num_enemies):
-        enemy = {
-            "position": spawn_item(window_x, window_y),
-            "direction": random.choice(['LEFT', 'RIGHT', 'UP', 'DOWN'])
-        }
-        enemies.append(enemy)
-    return enemies
+#     Returns:
+#         list: Una lista de diccionarios que representan a los enemigos en movimiento. Cada diccionario contiene la
+#               posición y dirección de un enemigo.
+#     """
+#     enemies = []
+#     for _ in range(num_enemies):
+#         enemy = {
+#             "position": spawn_item(window_x, window_y),
+#             "direction": random.choice(['LEFT', 'RIGHT', 'UP', 'DOWN'])
+#         }
+#         enemies.append(enemy)
+#     return enemies
 
 def validate_direction(change_to, direction):
     """
     Valida la dirección basándose en la entrada change_to y direction.
 
     Args:
-        change_to (str): cambiar_hacia (str): La dirección a la que cambiar. Debe ser una de las siguientes: 'UP', 'DOWN', 'LEFT', o 'RIGHT'.The direction to change to. Must be one of 'UP', 'DOWN', 'LEFT', or 'RIGHT'.
+        change_to (str): cambiar_hacia (str): La dirección a la que cambiar. Debe ser una de las siguientes: 'UP', 'DOWN', 'LEFT', o 'RIGHT'.
         direction (str): La dirección actual. Debe ser 'ARRIBA', 'ABAJO', 'IZQUIERDA' o 'DERECHA'.
 
     Returns:
@@ -107,39 +107,12 @@ def check_collision(position, window_x, window_y):
     Returns:
         bool: True si la posición colisiona con los límites de la ventana, False en caso contrario.
     """
+    # -10 porque considera el cuerpo del jugador a la hora de determinar la colisión
     if position[0] < 0 or position[0] > window_x - 10:
         return True
     if position[1] < 0 or position[1] > window_y - 10:
         return True
     return False
-
-def move_enemies(enemies, window_x):
-    """
-    Mueve a los enemigos en función de su dirección actual dentro de la ventana de juego.
-
-    Parameters:
-        enemies (list): Una lista de diccionarios que representan a los enemigos con sus posiciones y direcciones.
-        window_x (int): La anchura de la ventana de juego.
-
-    Returns:
-        list: Una lista de diccionarios que representan las posiciones actualizadas de los enemigos tras el movimiento.
-    """
-    for enemy in enemies:
-        direction = enemy["direction"]
-        if direction == 'LEFT':
-            enemy["position"][0] -= 10
-        if direction == 'RIGHT':
-            enemy["position"][0] += 10
-        if direction == 'UP':
-            enemy["position"][1] -= 10
-        if direction == 'DOWN':
-            enemy["position"][1] += 10
-
-        if enemy["position"][0] < 0 or enemy["position"][0] > window_x - 10:
-            enemy["direction"] = 'RIGHT' if direction == 'LEFT' else 'LEFT'
-        if enemy["position"][1] < 0 or enemy["position"][1] > window_x - 10:
-            enemy["direction"] = 'DOWN' if direction == 'UP' else 'UP'
-    return enemies
 
 def lose_life(sound, lives):
     """
@@ -191,6 +164,7 @@ def save_score(player_name, score, filename='scores.csv'):
     Returns:
         None
     """
+    # Append mode para agregar datos al archivo, mantiene el contenido existente sin sobreescribirlo
     with open(filename, mode='a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([player_name, score])
